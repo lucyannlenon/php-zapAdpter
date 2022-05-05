@@ -1,0 +1,20 @@
+{
+  "authors": [
+    {
+      "name": "lucyann lenon"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "LENON\\WAPP\\": "src/"
+    }
+  },
+  "require-dev": {
+    "symfony/console": "^6.0"
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^7.4",
+    "ext-fileinfo": "*",
+    "symfony/http-client": "^5.4.8"
+  }
+}
