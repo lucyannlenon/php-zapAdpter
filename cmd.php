@@ -8,9 +8,9 @@
     require __DIR__ . '/vendor/autoload.php';
 
 
-    $idInstancia = "3AADFC560FADD055FFFA265ECBC15AAE";
-    $token = "0DDC40794AAAF1CE0575E636";
-    $telefone = "5533991557333";
+    $idInstancia = "xxx";
+    $token = "xx";
+    $telefone = "xxx";
 
     $adpter = new ZAPIAdapter($idInstancia, $token);
 
