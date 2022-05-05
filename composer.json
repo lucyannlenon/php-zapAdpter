@@ -1,7 +1,12 @@
 {
+  "name": "llenon/zap-adapter",
+  "type": "library",
+  "description": "Adapter for send message wats-app",
+  "keywords": ["z-api","php"],
   "authors": [
     {
-      "name": "lucyann lenon"
+      "name": "lucyann lenon",
+      "email": "lucyann.lenon@gmail.com"
     }
   ],
   "autoload": {
