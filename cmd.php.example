@@ -10,7 +10,7 @@
 
     $idInstancia = "xxx";
     $token = "xx";
-    $telefone = "xxx";
+    $telefone = "xx";
 
     $adpter = new ZAPIAdapter($idInstancia, $token);
 
@@ -19,7 +19,7 @@
 
         $adpter->sendMsg("Olá Deivison esté não é noss melhor forma de contato entretanto você também pode falar conosco atravéz do canal:",$telefone);
 
-        $adpter->sendContact(new \LENON\WAPP\Model\ContactModel($telefone,"IZI Fácil","553333122222"));
+        $adpter->sendContact(new \LENON\WAPP\Model\ContactModel($telefone,"xxx","xx"));
 
     } catch (RequestException $e) {
         var_dump($e->getResponse()->getBody()->__toString());
