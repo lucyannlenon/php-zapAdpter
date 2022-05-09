@@ -20,6 +20,7 @@
   "require": {
     "guzzlehttp/guzzle": "^7.4",
     "ext-fileinfo": "*",
-    "symfony/http-client": "^5.4.8"
+    "jms/serializer": "^3.17",
+    "ext-json": "*"
   }
 }

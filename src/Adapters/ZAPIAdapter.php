@@ -11,6 +11,8 @@
     use LENON\WAPP\Model\DocumentModel;
     use LENON\WAPP\Model\ImageModel;
     use LENON\WAPP\Model\MessageModel;
+    use LENON\WAPP\Model\ReturnModel;
+    use MongoDB\Driver\Exception\ExecutionTimeoutException;
 
     class ZAPIAdapter
     {
@@ -28,24 +30,36 @@
         ];
 
         private $urlBase = "https://api.z-api.io/instances/:INSTANCIA/token/:TOKEN";
+        private $idInstancia;
+        private $token;
 
         public function __construct($idInstancia, $token)
         {
             $this->urlBase = str_replace([':INSTANCIA', ':TOKEN'], [$idInstancia, $token], $this->urlBase);
+            $this->idInstancia = $idInstancia;
+            $this->token = $token;
+        }
+
+        private function getConfig()
+        {
+            return [
+                'token' => $this->token,
+                'idInstancia' => $this->idInstancia
+            ];
         }
 
         /**
          * @param string $msg
          * @param $number
-         * @return void
+         * @return ReturnModel
          * @throws \GuzzleHttp\Exception\GuzzleException
          * @throws \LENON\WAPP\Model\Exception\ModelValidateException
          */
-        public function sendMsg(string $msg, $number): void
+        public function sendMsg(string $msg, $number): ReturnModel
         {
             $model = new MessageModel($msg, $number);
 
-            $this->send($model, self::ENDPOINTS[self::SEND_TEXT]);
+            return $this->send($model, self::ENDPOINTS[self::SEND_TEXT]);
 
         }
 
@@ -56,24 +70,24 @@
         public function sendDocumento(DocumentModel $model)
         {
 
-            $this->send($model, self::ENDPOINTS[self::SEND_DOCUMENT] . $model->getExtension());
+            return $this->send($model, self::ENDPOINTS[self::SEND_DOCUMENT] . $model->getExtension());
 
         }
 
 
         public function sendImage(ImageModel $imageModel)
         {
-            $this->send($imageModel, self::ENDPOINTS[self::SEND_IMAGE]);
+            return $this->send($imageModel, self::ENDPOINTS[self::SEND_IMAGE]);
         }
 
         public function sendButtons(ButtonsMessageModel $buttonsMessageModel)
         {
-            $this->send($buttonsMessageModel, self::ENDPOINTS[self::SEND_BUTTON]);
+            return $this->send($buttonsMessageModel, self::ENDPOINTS[self::SEND_BUTTON]);
         }
 
         public function sendContact(ContactModel $contactModel)
         {
-            $this->send($contactModel, self::ENDPOINTS[self::SEND_CONTACT]);
+            return $this->send($contactModel, self::ENDPOINTS[self::SEND_CONTACT]);
         }
 
         /**
@@ -97,16 +111,21 @@
                 'body' => $body
             ]);
 
-            echo $response->getStatusCode(); // 200
-            echo $response->getHeaderLine('content-type'); // 'application/json; charset=utf8'
-            echo $response->getBody();
+            if ($response->getStatusCode() == 200) {
+                $decode = json_decode($response->getBody(), true);
+
+                return new ReturnModel(
+                    $decode['id'],
+                    $decode,
+                    $msg,
+                    $this->getConfig(),
+                    self::class
+                );
+            }
+
+            throw  new AdapterException($response->getBody());
 
         }
 
 
     }
-    /*
-     *             if ($msg instanceof DocumentModel || $msg instanceof ImageModel) {
-                    $body = Utils::streamFor($body);
-                }
-     */
